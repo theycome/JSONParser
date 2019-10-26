@@ -17,12 +17,20 @@ public class Utils {
   static Pattern patternOpenSquareBracket = Pattern.compile("\\[");
   static Pattern patternCloseSquareBracket = Pattern.compile("]");
   static Pattern patternComma = Pattern.compile(",");
+  static Pattern patternColon = Pattern.compile(":");
+  static Pattern patternDoubleQuote = Pattern.compile("\"");
   static Pattern patternStartOfArray = Pattern.compile("\\[");
   static Pattern patternStartOfObject = Pattern.compile("\\{");
   static Pattern patternStartOfString = Pattern.compile("\\\"");
   static Pattern patternStartOfNumber = Pattern.compile("\\d");
+  static Pattern patternNumeric = Pattern.compile("[\\d.]+");
   static Pattern patternBoolTrue = Pattern.compile("true");
   static Pattern patternBoolFalse = Pattern.compile("false");
+  static Pattern patternUntilNextOpenFigureBracket = Pattern.compile("\\{[^{}]*");
+  static Pattern patternUntilNextCloseFigureBracket = Pattern.compile("\\}[^{}]*");
+  static Pattern patternUntilNextOpenSquareBracket = Pattern.compile("\\[[^\\[\\]]*");
+  static Pattern patternUntilNextCloseSquareBracket = Pattern.compile("\\][^\\[\\]]*");
+  static Pattern patternAlphaNumericStringInsideDoubleQuote = Pattern.compile("\\\"[\\w]*");
 
   /**
    * Result
@@ -170,18 +178,18 @@ public class Utils {
     switch (valueType) {
       case object:
         if (separatorOpen) {
-          matcher = Pattern.compile("\\{[^{}]*").matcher(sub);
+          matcher = patternUntilNextOpenFigureBracket.matcher(sub);
         }
         else {
-          matcher = Pattern.compile("\\}[^{}]*").matcher(sub);
+          matcher = patternUntilNextCloseFigureBracket.matcher(sub);
         }
         break;
       case array:
         if (separatorOpen) {
-          matcher = Pattern.compile("\\[[^\\[\\]]*").matcher(sub);
+          matcher = patternUntilNextOpenSquareBracket.matcher(sub);
         }
         else {
-          matcher = Pattern.compile("\\][^\\[\\]]*").matcher(sub);
+          matcher = patternUntilNextCloseSquareBracket.matcher(sub);
         }
         break;
     }
@@ -205,10 +213,10 @@ public class Utils {
     Matcher matcherOpenSeparator = null;
     switch (valueType) {
       case object:
-        matcher = Pattern.compile("\\{[^{}]*").matcher(sub);
+        matcher = patternUntilNextOpenFigureBracket.matcher(sub);
         break;
       case array:
-        matcher = Pattern.compile("\\[[^\\[\\]]*").matcher(sub);
+        matcher = patternUntilNextOpenSquareBracket.matcher(sub);
         break;
     }
 
@@ -362,12 +370,12 @@ public class Utils {
 
     switch (valueType) {
       case object:
-        patternOpen = Pattern.compile("\\{");
-        patternClose = Pattern.compile("\\}");
+        patternOpen = patternOpenFigureBracket;
+        patternClose = patternCloseFigureBracket;
         break;
       case array:
-        patternOpen = Pattern.compile("\\[");
-        patternClose = Pattern.compile("\\]");
+        patternOpen = patternOpenSquareBracket;
+        patternClose = patternCloseSquareBracket;
         break;
       default:
         throw new InvalidParameterException(valueType.toString());
@@ -445,7 +453,7 @@ public class Utils {
 
     String sub = json;
     String name = "";
-    Pattern patternName = Pattern.compile("\\\"[\\w]*");
+    Pattern patternName = patternAlphaNumericStringInsideDoubleQuote;
     Matcher matcher;
     Matcher matcherObject;
     int start = Integer.MAX_VALUE;
@@ -478,7 +486,7 @@ public class Utils {
     name = sub.substring(matcher.start() + 1, matcher.end());
     sub = sub.substring(matcher.end() + 1, sub.length());
 
-    matcher = Pattern.compile(":").matcher(sub);
+    matcher = patternColon.matcher(sub);
     if (!matcher.find()) {
       return failure();
     }
@@ -565,7 +573,7 @@ public class Utils {
 
         int start = -1;
         int end = -1;
-        matcher = Pattern.compile("\"").matcher(sub);
+        matcher = patternDoubleQuote.matcher(sub);
         while (matcher.find()) {
           int startMatcher = matcher.start();
 
@@ -592,7 +600,7 @@ public class Utils {
 
         break;
       case number:
-        matcher = Pattern.compile("[\\d.]+").matcher(sub);
+        matcher = patternNumeric.matcher(sub);
         if (!matcher.find()) {
           return failure();
         }
