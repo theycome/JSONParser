@@ -9,6 +9,7 @@ import src.theycome_json.Parser;
 
 /**
  * Created by theycome on 27.09.2019
+ * sample json files taken from - https://www.sitepoint.com/10-example-json-files/
  */
 
 public class ParserTest {
@@ -165,6 +166,95 @@ public class ParserTest {
 
     Assert.assertEquals(expected, parser.toString());
   }
+
+  @Test
+  public void parse_1_twitter() {
+
+    String json = "[{\n" +
+      "  \"created_at\": \"Thu Jun 22 21:00:00 +0000 2017\",\n" +
+      "  \"id\": 877994604561387500,\n" +
+      "  \"id_str\": \"877994604561387520\",\n" +
+      "  \"text\": \"Creating a Grocery List Manager Using Angular, Part 1: Add &amp; Display Items https://t.co/xFox78juL1 #Angular\",\n" +
+      "  \"truncated\": false,\n" +
+      "  \"entities\": {\n" +
+      "    \"hashtags\": [{\n" +
+      "      \"text\": \"Angular\",\n" +
+      "      \"indices\": [103, 111]\n" +
+      "    }],\n" +
+      "    \"symbols\": [],\n" +
+      "    \"user_mentions\": [],\n" +
+      "    \"urls\": [{\n" +
+      "      \"url\": \"https://t.co/xFox78juL1\",\n" +
+      "      \"expanded_url\": \"http://buff.ly/2sr60pf\",\n" +
+      "      \"display_url\": \"buff.ly/2sr60pf\",\n" +
+      "      \"indices\": [79, 102]\n" +
+      "    }]\n" +
+      "  },\n" +
+      "  \"source\": \"<a href=\\\"http://bufferapp.com\\\" rel=\\\"nofollow\\\">Buffer</a>\",\n" +
+      "  \"user\": {\n" +
+      "    \"id\": 772682964,\n" +
+      "    \"id_str\": \"772682964\",\n" +
+      "    \"name\": \"SitePoint JavaScript\",\n" +
+      "    \"screen_name\": \"SitePointJS\",\n" +
+      "    \"location\": \"Melbourne, Australia\",\n" +
+      "    \"description\": \"Keep up with JavaScript tutorials, tips, tricks and articles at SitePoint.\",\n" +
+      "    \"url\": \"http://t.co/cCH13gqeUK\",\n" +
+      "    \"entities\": {\n" +
+      "      \"url\": {\n" +
+      "        \"urls\": [{\n" +
+      "          \"url\": \"http://t.co/cCH13gqeUK\",\n" +
+      "          \"expanded_url\": \"http://sitepoint.com/javascript\",\n" +
+      "          \"display_url\": \"sitepoint.com/javascript\",\n" +
+      "          \"indices\": [0, 22]\n" +
+      "        }]\n" +
+      "      },\n" +
+      "      \"description\": {\n" +
+      "        \"urls\": []\n" +
+      "      }\n" +
+      "    },\n" +
+      "    \"protected\": false,\n" +
+      "    \"followers_count\": 2145,\n" +
+      "    \"friends_count\": 18,\n" +
+      "    \"listed_count\": 328,\n" +
+      "    \"created_at\": \"Wed Aug 22 02:06:33 +0000 2012\",\n" +
+      "    \"favourites_count\": 57,\n" +
+      "    \"utc_offset\": 43200,\n" +
+      "    \"time_zone\": \"Wellington\",\n" +
+      "  },\n" +
+      "}]";
+
+    String expected = "[{\"created_at\":\"Thu Jun 22 21:00:00 +0000 2017\",\"id\":877994604561387500,\"id_str\":\"877994604561387520\",\"text\":\"Creating a Grocery List Manager Using Angular, Part 1: Add &amp; Display Items https://t.co/xFox78juL1 #Angular\",\"truncated\":false,\"entities\":{\"hashtags\":[{\"text\":\"Angular\",\"indices\":[103,111]}],\"symbols\":[],\"user_mentions\":[],\"urls\":[{\"url\":\"https://t.co/xFox78juL1\",\"expanded_url\":\"http://buff.ly/2sr60pf\",\"display_url\":\"buff.ly/2sr60pf\",\"indices\":[79,102]}]},\"source\":\"<a href=\\\"http://bufferapp.com\\\" rel=\\\"nofollow\\\">Buffer</a>\",\"user\":{\"id\":772682964,\"id_str\":\"772682964\",\"name\":\"SitePoint JavaScript\",\"screen_name\":\"SitePointJS\",\"location\":\"Melbourne, Australia\",\"description\":\"Keep up with JavaScript tutorials, tips, tricks and articles at SitePoint.\",\"url\":\"http://t.co/cCH13gqeUK\",\"entities\":{\"url\":{\"urls\":[{\"url\":\"http://t.co/cCH13gqeUK\",\"expanded_url\":\"http://sitepoint.com/javascript\",\"display_url\":\"sitepoint.com/javascript\",\"indices\":[0,22]}]},\"description\":{\"urls\":[]}},\"protected\":false,\"followers_count\":2145,\"friends_count\":18,\"listed_count\":328,\"created_at\":\"Wed Aug 22 02:06:33 +0000 2012\",\"favourites_count\":57,\"utc_offset\":43200,\"time_zone\":\"Wellington\",},}]";
+
+    parser.parse(json);
+
+    Assert.assertEquals(expected, parser.toString());
+  }
+
+  @Test
+  public void parse_stringWithCommasInside() {
+
+    String json = "{\"name\":\"abc,def\"}";
+
+    String expected = "{\"name\":\"abc,def\"}";
+
+    parser.parse(json);
+
+    Assert.assertEquals(expected, parser.toString());
+  }
+
+  @Test
+  public void parse_ColorArray() {
+
+    String json = "{\"rgba\":[255,255,255,1]}";
+
+    String expected = "{\"rgba\":[255,255,255,1]}";
+
+    parser.parse(json);
+
+    Assert.assertEquals(expected, parser.toString());
+  }
+
+
 
 }
 

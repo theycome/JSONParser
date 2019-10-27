@@ -12,6 +12,75 @@ import src.theycome_json.Utils;
 
 public class UtilsTest {
 
+  //region getIndexOfFirstCommaPastStringClusters
+  @Test
+  public void getIndexOfFirstCommaPastStringClusters_1(){
+
+    String json = "\"pos\\\"it,ion\": \"abc\" ,def";
+
+    Utils.Result res = Utils.getIndexOfFirstCommaPastStringClusters(json);
+
+    Assert.assertTrue(res.success());
+    Assert.assertEquals(21, res.number());
+  }
+
+  @Test
+  public void getIndexOfFirstCommaPastStringClusters_2(){
+
+    String json = "  , \"pos\\\"it,ion\": \"abc\" ,def";
+
+    Utils.Result res = Utils.getIndexOfFirstCommaPastStringClusters(json);
+
+    Assert.assertTrue(res.success());
+    Assert.assertEquals(2, res.number());
+  }
+
+  @Test
+  public void getIndexOfFirstCommaPastStringClusters_3(){
+
+    String json = "255,255,255,1";
+
+    Utils.Result res = Utils.getIndexOfFirstCommaPastStringClusters(json);
+
+    Assert.assertTrue(res.success());
+    Assert.assertEquals(3, res.number());
+  }
+  //endregion
+
+  //region ifCommaPrecedesOpenSeparator
+  @Test
+  public void ifCommaPrecedesOpenSeparator_1(){
+
+    String json = "255,255,255,1";
+
+    String lhs = "255";
+
+    String rhs = "255,255,1";
+
+    Utils.Result res = Utils.ifCommaPrecedesOpenSeparator(json, Parser.VALUE_TYPE.none);
+
+    Assert.assertTrue(res.success());
+    Assert.assertEquals(lhs, res.getSplit().getKey());
+    Assert.assertEquals(rhs, res.getSplit().getValue());
+  }
+
+  @Test
+  public void ifCommaPrecedesOpenSeparator_2(){
+
+    String json = "\"pos\\\"it,ion\": \"abc\" ,def";
+
+    String lhs = "\"pos\\\"it,ion\": \"abc\" ";
+
+    String rhs = "def";
+
+    Utils.Result res = Utils.ifCommaPrecedesOpenSeparator(json, Parser.VALUE_TYPE.none);
+
+    Assert.assertTrue(res.success());
+    Assert.assertEquals(lhs, res.getSplit().getKey());
+    Assert.assertEquals(rhs, res.getSplit().getValue());
+  }
+  //endregion
+
   //region getOpeningSeparatorType
   @Test
   public void getOpeningSeparatorType_0(){
@@ -259,6 +328,21 @@ public class UtilsTest {
     Utils.Result res = Utils.splitOnCommaExcludingClusters(json);
 
     Assert.assertTrue(res.success());
+    Assert.assertEquals(lhs, res.getSplit().getKey());
+    Assert.assertEquals(rhs, res.getSplit().getValue());
+  }
+
+  @Test
+  public void splitOnCommaExcludingClusters_commaInsideString() {
+
+    String json = "\"position\": \"abc,def\"";
+
+    String lhs = "\"position\": \"abc,def\"";
+    String rhs = "";
+
+    Utils.Result res = Utils.splitOnCommaExcludingClusters(json);
+
+    Assert.assertTrue(res.failure());
     Assert.assertEquals(lhs, res.getSplit().getKey());
     Assert.assertEquals(rhs, res.getSplit().getValue());
   }

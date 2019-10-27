@@ -38,16 +38,16 @@ public class Utils {
   public static class Result {
 
     private boolean success = false;
-    Pair<String, String> split;
-    String substring;
-    int count;
-    Parser.VALUE_TYPE valueType = null;
+    private Pair<String, String> split;
+    private String substring;
+    private int number;
+    private Parser.VALUE_TYPE valueType = null;
 
-    Result(boolean success, Pair<String, String> split, String substring, int count, Parser.VALUE_TYPE valueType) {
+    Result(boolean success, Pair<String, String> split, String substring, int number, Parser.VALUE_TYPE valueType) {
       this.success = success;
       this.split = split;
       this.substring = substring;
-      this.count = count;
+      this.number = number;
       this.valueType = valueType;
     }
 
@@ -66,6 +66,10 @@ public class Utils {
     public String substring() {
       return substring;
     }
+
+    public int number() {
+      return number;
+    }
   }
 
   /**
@@ -76,7 +80,7 @@ public class Utils {
     boolean mSuccess = false;
     Pair<String, String> mSplit;
     String mSubstring;
-    int mCount = 0;
+    int mNumber = 0;
     Parser.VALUE_TYPE mValueType = null;
 
     public ResultBuilder success() {
@@ -94,8 +98,8 @@ public class Utils {
       return this;
     }
 
-    public ResultBuilder count(int count) {
-      this.mCount = count;
+    public ResultBuilder number(int number) {
+      this.mNumber = number;
       return this;
     }
 
@@ -110,7 +114,7 @@ public class Utils {
     }
 
     public Result get() {
-      return new Result(mSuccess, mSplit, mSubstring, mCount, mValueType);
+      return new Result(mSuccess, mSplit, mSubstring, mNumber, mValueType);
     }
   }
 
@@ -127,13 +131,88 @@ public class Utils {
   }
 
   /**
-   * if comma precedes separator - return a split, else return failure()
+   * if not or not found - return -1
+   */
+  public static int getIndexOfCommaIfItPrecedesDoubleQuote(String source) {
+
+    int indexOfComma = source.indexOf(",");
+    int indexOfDoubleQuote = source.indexOf("\"");
+
+    if (indexOfComma != -1) {
+      if (indexOfDoubleQuote == -1 || indexOfComma < indexOfDoubleQuote) {
+        return indexOfComma;
+      }
+    }
+
+    return -1;
+  }
+
+  /**
+   * return in Result.number - the index of first comma symbol
+   * discounting all possible commas inside double quotes
+   */
+  public static Result getIndexOfFirstCommaPastStringClusters(String source) {
+
+    String sub = source;
+    Matcher matcherDoubleQuote = patternDoubleQuote.matcher(sub);
+    Matcher matcherComma = patternComma.matcher(sub);
+
+    String rhs = source;
+    int start = -1;
+    int end = -1;
+
+    int indexOfComma = getIndexOfCommaIfItPrecedesDoubleQuote(rhs);
+    if (indexOfComma != -1) {
+      return new ResultBuilder().number(indexOfComma).success().get();
+    }
+
+    while (matcherDoubleQuote.find()) {
+
+      int startMatcher = matcherDoubleQuote.start();
+
+      // sequence of two symbols '\' and '"' is NOT a terminator of string value
+      // we need to discount such sequences until we meet correct terminating symbol '"'
+      if (!(startMatcher > 0 && sub.substring(startMatcher - 1, startMatcher).equals("\\"))) {
+        // make sure we don`t have '\' as previous symbol
+        if (start == -1) {
+          start = startMatcher;
+        }
+        else {
+          end = startMatcher;
+        }
+      }
+
+      if (end != -1) {
+
+        rhs = rightSubstring(sub, end + 1);
+        indexOfComma = getIndexOfCommaIfItPrecedesDoubleQuote(rhs);
+        if (indexOfComma != -1) {
+          return new ResultBuilder().number(end + indexOfComma + 1).success().get();
+        }
+
+        // reinitialize
+        start = -1;
+        end = -1;
+      }
+
+    }
+
+    return failure();
+  }
+
+  /**
+   * if comma precedes separator - return a split on that comma,
+   * else return failure()
    */
   public static Result ifCommaPrecedesOpenSeparator(String source, Parser.VALUE_TYPE valueType) {
 
     String sub = source;
-    Matcher matcherComma = patternComma.matcher(sub);
     Matcher matcherOpenSeparator = null;
+    Result res = getIndexOfFirstCommaPastStringClusters(sub);
+    if (res.failure()) {
+      return failure();
+    }
+
     switch (valueType) {
       case object:
         matcherOpenSeparator = patternOpenFigureBracket.matcher(sub);
@@ -141,29 +220,22 @@ public class Utils {
       case array:
         matcherOpenSeparator = patternOpenSquareBracket.matcher(sub);
         break;
+      case none:
+        String lhs = leftSubstring(sub, res.number());
+        String rhs = rightSubstring(sub, res.number() + 1);
+        return new ResultBuilder().split(lhs, rhs).success().get();
       default:
         break;
     }
 
-    if (matcherComma.find()) {
-
-      boolean bracketNotFoundOrFartherThanComma = true;
-
-      // use the fact that matcherOpenSeparator is not initialized if valueType is not [object|array]
-      if (matcherOpenSeparator != null && matcherOpenSeparator.find()) {
-        if (matcherOpenSeparator.start() <= matcherComma.start()) {
-          bracketNotFoundOrFartherThanComma = false;
-        }
-      }
-
-      if (bracketNotFoundOrFartherThanComma) {
-        String lhs = leftSubstring(sub, matcherComma.start());
-        String rhs = rightSubstring(sub, matcherComma.end());
-        return new ResultBuilder().split(lhs, rhs).success().get();
-      }
+    // invariant: valueType == {object|array} && res.success()
+    if (matcherOpenSeparator.find() && res.number() > matcherOpenSeparator.start()) {
+      return failure();
     }
 
-    return failure();
+    String lhs = leftSubstring(sub, res.number());
+    String rhs = rightSubstring(sub, res.number() + 1);
+    return new ResultBuilder().split(lhs, rhs).success().get();
   }
 
   /**
@@ -226,7 +298,7 @@ public class Utils {
       String symbolAfter = sub.substring(matcher.end(), matcher.end() + 1);
       if (symbolAfter.equals(getSymbolClose(valueType))) {
         sub = sub.substring(matcher.end(), sub.length()); // rhs
-        return new ResultBuilder().substring(sub).count(count).success().get();
+        return new ResultBuilder().substring(sub).number(count).success().get();
       }
     }
 
@@ -267,13 +339,14 @@ public class Utils {
   public static Result findFirstComma(String source) {
 
     String sub = source;
-    Matcher matcher = patternComma.matcher(sub);
-    while (matcher.find()) {
-      sub = sub.substring(matcher.end(), sub.length());
-      return new ResultBuilder().substring(sub).success().get();
+    Result res = getIndexOfFirstCommaPastStringClusters(sub);
+    if (res.failure()) {
+      return failure();
     }
-
-    return failure();
+    else {
+      String rhs = rightSubstring(sub, res.number() + 1);
+      return new ResultBuilder().substring(rhs).success().get();
+    }
   }
 
   /**
