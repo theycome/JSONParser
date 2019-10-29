@@ -254,6 +254,32 @@ public class ParserTest {
     Assert.assertEquals(expected, parser.toString());
   }
 
+  @Test
+  public void parse_geoip() {
+
+    String json = "{\n" +
+      "  \"as\": \"AS16509 Amazon.com, Inc.\",\n" +
+      "  \"city\": \"Boardman\",\n" +
+      "  \"country\": \"United States\",\n" +
+      "  \"countryCode\": \"US\",\n" +
+      "  \"isp\": \"Amazon\",\n" +
+      "  \"lat\": 45.8696,\n" +
+      "  \"lon\": -119.688,\n" +
+      "  \"org\": \"Amazon\",\n" +
+      "  \"query\": \"54.148.84.95\",\n" +
+      "  \"region\": \"OR\",\n" +
+      "  \"regionName\": \"Oregon\",\n" +
+      "  \"status\": \"success\",\n" +
+      "  \"timezone\": \"America\\/Los_Angeles\",\n" +
+      "  \"zip\": \"97818\"\n" +
+      "}";
+
+    String expected = "{\"as\":\"AS16509 Amazon.com, Inc.\",\"city\":\"Boardman\",\"country\":\"United States\",\"countryCode\":\"US\",\"isp\":\"Amazon\",\"lat\":45.8696,\"lon\":-119.688,\"org\":\"Amazon\",\"query\":\"54.148.84.95\",\"region\":\"OR\",\"regionName\":\"Oregon\",\"status\":\"success\",\"timezone\":\"America\\/Los_Angeles\",\"zip\":\"97818\"}";
+
+    parser.parse(json);
+
+    Assert.assertEquals(expected, parser.toString());
+  }
 
 
 }

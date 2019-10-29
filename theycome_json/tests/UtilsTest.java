@@ -779,6 +779,32 @@ public class UtilsTest {
 
   //region getLeafValue
   @Test
+  public void getLeafValue_numberNegative() {
+
+    String json = " -123 ";
+
+    String value = "-123";
+
+    Utils.Result res = Utils.getLeafValue(json, Parser.VALUE_TYPE.number);
+
+    Assert.assertTrue(res.success());
+    Assert.assertEquals(value, res.substring());
+  }
+
+  @Test
+  public void getLeafValue_numberNegative2() {
+
+    String json = " -123.01 ";
+
+    String value = "-123.01";
+
+    Utils.Result res = Utils.getLeafValue(json, Parser.VALUE_TYPE.number);
+
+    Assert.assertTrue(res.success());
+    Assert.assertEquals(value, res.substring());
+  }
+
+  @Test
   public void getLeafValue_string() {
 
     String json = " \"black\"";

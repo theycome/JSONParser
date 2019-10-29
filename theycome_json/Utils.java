@@ -23,7 +23,7 @@ public class Utils {
   static Pattern patternStartOfObject = Pattern.compile("\\{");
   static Pattern patternStartOfString = Pattern.compile("\\\"");
   static Pattern patternStartOfNumber = Pattern.compile("\\d");
-  static Pattern patternNumeric = Pattern.compile("[\\d.]+");
+  static Pattern patternNumeric = Pattern.compile("-?[\\d.]+");
   static Pattern patternBoolTrue = Pattern.compile("true");
   static Pattern patternBoolFalse = Pattern.compile("false");
   static Pattern patternUntilNextOpenFigureBracket = Pattern.compile("\\{[^{}]*");
