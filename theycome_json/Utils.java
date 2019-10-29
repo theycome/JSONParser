@@ -278,64 +278,6 @@ public class Utils {
   /**
    *
    */
-  public static Result matchAllOpenSeparatorsBeforeFirstCloseSeparator(String source, Parser.VALUE_TYPE valueType) {
-
-    String sub = source;
-    Matcher matcher = null;
-    Matcher matcherOpenSeparator = null;
-    switch (valueType) {
-      case object:
-        matcher = patternUntilNextOpenFigureBracket.matcher(sub);
-        break;
-      case array:
-        matcher = patternUntilNextOpenSquareBracket.matcher(sub);
-        break;
-    }
-
-    int count = 0;
-    while (matcher.find()) {
-      count++;
-      String symbolAfter = sub.substring(matcher.end(), matcher.end() + 1);
-      if (symbolAfter.equals(getSymbolClose(valueType))) {
-        sub = sub.substring(matcher.end(), sub.length()); // rhs
-        return new ResultBuilder().substring(sub).number(count).success().get();
-      }
-    }
-
-    return failure();
-  }
-
-  /**
-   *
-   */
-  public static Result matchNCloseSeparators(String source, int countToMatch, Parser.VALUE_TYPE valueType) {
-
-    String sub = source;
-    Matcher matcher = null;
-    switch (valueType) {
-      case object:
-        matcher = patternCloseFigureBracket.matcher(sub);
-        break;
-      case array:
-        matcher = patternCloseSquareBracket.matcher(sub);
-        break;
-    }
-
-    int count = 0;
-    while (matcher.find()) {
-      count++;
-      if (count == countToMatch) {
-        sub = sub.substring(matcher.end(), sub.length());
-        return new ResultBuilder().substring(sub).success().get();
-      }
-    }
-
-    return failure();
-  }
-
-  /**
-   *
-   */
   public static Result findFirstComma(String source) {
 
     String sub = source;
