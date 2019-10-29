@@ -7,6 +7,7 @@ package src.theycome_json;
 import java.security.InvalidParameterException;
 
 import src.theycome_json.containers.Container;
+import src.theycome_json.containers.LeafBool;
 import src.theycome_json.containers.LeafNumber;
 import src.theycome_json.containers.LeafString;
 import src.theycome_json.containers.NodeArray;
@@ -100,6 +101,7 @@ public class Parser {
           parent.addEntry(new LeafNumber(name, res.substring()));
           break;
         case bool:
+          parent.addEntry(new LeafBool(name, res.substring()));
           break;
       }
     }
