@@ -474,9 +474,9 @@ public class Utils {
     int start = Integer.MAX_VALUE;
     boolean nameFound = false;
 
-    matcher = patternName.matcher(json);
-    if (matcher.find()) {
-      start = matcher.start();
+    Pair<Integer, Integer> startEnd = getStartEndOfString(sub);
+    if (startEnd.getKey() != -1 && startEnd.getValue() != -1) {
+      start = startEnd.getKey();
       nameFound = true;
     }
 
@@ -498,8 +498,8 @@ public class Utils {
       return failure();
     }
 
-    name = sub.substring(matcher.start() + 1, matcher.end());
-    sub = sub.substring(matcher.end() + 1, sub.length());
+    name = sub.substring(startEnd.getKey() + 1, startEnd.getValue());
+    sub = rightSubstring(sub, startEnd.getValue() + 1);
 
     matcher = patternColon.matcher(sub);
     if (!matcher.find()) {
@@ -573,6 +573,41 @@ public class Utils {
   }
 
   /**
+   *
+   */
+  public static Pair<Integer, Integer> getStartEndOfString(String json) {
+
+    String sub = json;
+    int start = -1;
+    int end = -1;
+    Matcher matcher = patternDoubleQuote.matcher(sub);
+    while (matcher.find()) {
+      int startMatcher = matcher.start();
+
+      // sequence of two symbols '\' and '"' is NOT a terminator of string value
+      // we need to discount such sequences until we meet correct terminating symbol '"'
+      if (!(startMatcher > 0 && sub.substring(startMatcher - 1, startMatcher).equals("\\"))) {
+        // make sure we don`t have '\' as previous symbol
+        if (start == -1) {
+          start = startMatcher;
+        }
+        else {
+          end = startMatcher;
+          break;
+        }
+      }
+    }
+
+    if (start == -1 && end == -1) {
+      return new Pair<>(-1, -1);
+    }
+    else {
+      return new Pair<>(start, end);
+    }
+
+  }
+
+  /**
    * should be one of these "leaf" types {string, number, bool}
    * we already know which type we`re extracting
    */
@@ -586,42 +621,28 @@ public class Utils {
     switch (valueType) {
       case string:
 
-        int start = -1;
-        int end = -1;
-        matcher = patternDoubleQuote.matcher(sub);
-        while (matcher.find()) {
-          int startMatcher = matcher.start();
-
-          // sequence of two symbols '\' and '"' is NOT a terminator of string value
-          // we need to discount such sequences until we meet correct terminating symbol '"'
-          if (!(startMatcher > 0 && sub.substring(startMatcher - 1, startMatcher).equals("\\"))) {
-            // make sure we don`t have '\' as previous symbol
-            if (start == -1) {
-              start = startMatcher;
-            }
-            else {
-              end = startMatcher;
-              break;
-            }
-          }
-        }
-
-        if (start == -1 && end == -1) {
+        Pair<Integer, Integer> startEnd = getStartEndOfString(sub);
+        if (startEnd.getKey() == -1 && startEnd.getValue() == -1) {
           return failure();
         }
         else {
-          value = sub.substring(start + 1, end);
+          value = sub.substring(startEnd.getKey() + 1, startEnd.getValue());
         }
 
         break;
+
       case number:
+
         matcher = patternNumeric.matcher(sub);
         if (!matcher.find()) {
           return failure();
         }
         value = sub.substring(matcher.start(), matcher.end());
+
         break;
+
       case bool:
+
         matcher = patternBoolTrue.matcher(sub);
         if (matcher.find()) {
           value = "true";
@@ -635,7 +656,9 @@ public class Utils {
             return failure();
           }
         }
+
         break;
+
       default:
         throw new InvalidParameterException(valueType.toString());
     }

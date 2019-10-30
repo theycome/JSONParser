@@ -643,6 +643,39 @@ public class UtilsTest {
   //endregion
 
   //region getName
+
+  @Test
+  public void getName_nameStartingWithDollarSign() {
+
+    String json = "\"$oid\": \"5968dd23fc13ae04d9000001\"";
+
+    String name = "$oid";
+
+    String rhs = " \"5968dd23fc13ae04d9000001\"";
+
+    Utils.Result res = Utils.getName(json);
+
+    Assert.assertTrue(res.success());
+    Assert.assertEquals(name, res.getSplit().getKey());
+    Assert.assertEquals(rhs, res.getSplit().getValue());
+  }
+
+  @Test
+  public void getName_nameWithWeirdCharacters() {
+
+    String json = "\"*jk#$\\\"@f\nff\": \"abc\"";
+
+    String name = "*jk#$\\\"@f\nff";
+
+    String rhs = " \"abc\"";
+
+    Utils.Result res = Utils.getName(json);
+
+    Assert.assertTrue(res.success());
+    Assert.assertEquals(name, res.getSplit().getKey());
+    Assert.assertEquals(rhs, res.getSplit().getValue());
+  }
+
   @Test
   public void getName_1_noName() {
 
