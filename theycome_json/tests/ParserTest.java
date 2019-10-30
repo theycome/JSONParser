@@ -363,5 +363,197 @@ public class ParserTest {
     Assert.assertEquals(expected, parser.toString());
   }
 
+  @Test
+  public void parse_localRest() {
+
+    String json = "{\n" +
+      "  \"total\": 25,\n" +
+      "  \"limit\": 10,\n" +
+      "  \"skip\": 0,\n" +
+      "  \"data\": [{\n" +
+      "    \"_id\": \"5968fcad629fa84ab65a5247\",\n" +
+      "    \"first_name\": \"Sabrina\",\n" +
+      "    \"last_name\": \"Mayert\",\n" +
+      "    \"address\": \"69756 Wendy Junction\",\n" +
+      "    \"phone\": \"1-406-866-3476 x478\",\n" +
+      "    \"email\": \"donny54@yahoo.com\",\n" +
+      "    \"updatedAt\": \"2017-07-14T17:17:33.010Z\",\n" +
+      "    \"createdAt\": \"2017-07-14T17:17:33.010Z\",\n" +
+      "    \"__v\": 0\n" +
+      "  }, {\n" +
+      "    \"_id\": \"5968fcad629fa84ab65a5246\",\n" +
+      "    \"first_name\": \"Taryn\",\n" +
+      "    \"last_name\": \"Dietrich\",\n" +
+      "    \"address\": \"42080 Federico Greens\",\n" +
+      "    \"phone\": \"(197) 679-7020 x98462\",\n" +
+      "    \"email\": \"betty_schaefer1@gmail.com\",\n" +
+      "    \"updatedAt\": \"2017-07-14T17:17:33.006Z\",\n" +
+      "    \"createdAt\": \"2017-07-14T17:17:33.006Z\",\n" +
+      "    \"__v\": 0\n" +
+      "  },\n" +
+      "  \n" +
+      "  ]\n" +
+      "}";
+
+    String expected = "{\"total\":25,\"limit\":10,\"skip\":0,\"data\":[{\"_id\":\"5968fcad629fa84ab65a5247\",\"first_name\":\"Sabrina\",\"last_name\":\"Mayert\",\"address\":\"69756 Wendy Junction\",\"phone\":\"1-406-866-3476 x478\",\"email\":\"donny54@yahoo.com\",\"updatedAt\":\"2017-07-14T17:17:33.010Z\",\"createdAt\":\"2017-07-14T17:17:33.010Z\",\"__v\":0},{\"_id\":\"5968fcad629fa84ab65a5246\",\"first_name\":\"Taryn\",\"last_name\":\"Dietrich\",\"address\":\"42080 Federico Greens\",\"phone\":\"(197) 679-7020 x98462\",\"email\":\"betty_schaefer1@gmail.com\",\"updatedAt\":\"2017-07-14T17:17:33.006Z\",\"createdAt\":\"2017-07-14T17:17:33.006Z\",\"__v\":0}]}";
+
+    parser.parse(json);
+
+    Assert.assertEquals(expected, parser.toString());
+  }
+
+  @Test
+  public void parse_testData1() {
+
+    String json = "[{\n" +
+      "  \"id\": 1,\n" +
+      "  \"first_name\": \"Jeanette\",\n" +
+      "  \"last_name\": \"Penddreth\",\n" +
+      "  \"email\": \"jpenddreth0@census.gov\",\n" +
+      "  \"gender\": \"Female\",\n" +
+      "  \"ip_address\": \"26.58.193.2\"\n" +
+      "}, {\n" +
+      "  \"id\": 2,\n" +
+      "  \"first_name\": \"Giavani\",\n" +
+      "  \"last_name\": \"Frediani\",\n" +
+      "  \"email\": \"gfrediani1@senate.gov\",\n" +
+      "  \"gender\": \"Male\",\n" +
+      "  \"ip_address\": \"229.179.4.212\"\n" +
+      "}, {\n" +
+      "  \"id\": 3,\n" +
+      "  \"first_name\": \"Noell\",\n" +
+      "  \"last_name\": \"Bea\",\n" +
+      "  \"email\": \"nbea2@imageshack.us\",\n" +
+      "  \"gender\": \"Female\",\n" +
+      "  \"ip_address\": \"180.66.162.255\"\n" +
+      "}, {\n" +
+      "  \"id\": 4,\n" +
+      "  \"first_name\": \"Willard\",\n" +
+      "  \"last_name\": \"Valek\",\n" +
+      "  \"email\": \"wvalek3@vk.com\",\n" +
+      "  \"gender\": \"Male\",\n" +
+      "  \"ip_address\": \"67.76.188.26\"\n" +
+      "}]";
+
+    String expected = "[{\"id\":1,\"first_name\":\"Jeanette\",\"last_name\":\"Penddreth\",\"email\":\"jpenddreth0@census.gov\",\"gender\":\"Female\",\"ip_address\":\"26.58.193.2\"},{\"id\":2,\"first_name\":\"Giavani\",\"last_name\":\"Frediani\",\"email\":\"gfrediani1@senate.gov\",\"gender\":\"Male\",\"ip_address\":\"229.179.4.212\"},{\"id\":3,\"first_name\":\"Noell\",\"last_name\":\"Bea\",\"email\":\"nbea2@imageshack.us\",\"gender\":\"Female\",\"ip_address\":\"180.66.162.255\"},{\"id\":4,\"first_name\":\"Willard\",\"last_name\":\"Valek\",\"email\":\"wvalek3@vk.com\",\"gender\":\"Male\",\"ip_address\":\"67.76.188.26\"}]";
+
+    parser.parse(json);
+
+    Assert.assertEquals(expected, parser.toString());
+  }
+
+  @Test
+  public void parse_testData2() {
+
+    String json = "[\n" +
+      "  {\n" +
+      "    \"_id\": \"5973782bdb9a930533b05cb2\",\n" +
+      "    \"isActive\": true,\n" +
+      "    \"balance\": \"$1,446.35\",\n" +
+      "    \"age\": 32,\n" +
+      "    \"eyeColor\": \"green\",\n" +
+      "    \"name\": \"Logan Keller\",\n" +
+      "    \"gender\": \"male\",\n" +
+      "    \"company\": \"ARTIQ\",\n" +
+      "    \"email\": \"logankeller@artiq.com\",\n" +
+      "    \"phone\": \"+1 (952) 533-2258\",\n" +
+      "    \"friends\": [\n" +
+      "      {\n" +
+      "        \"id\": 0,\n" +
+      "        \"name\": \"Colon Salazar\"\n" +
+      "      },\n" +
+      "      {\n" +
+      "        \"id\": 1,\n" +
+      "        \"name\": \"French Mcneil\"\n" +
+      "      },\n" +
+      "      {\n" +
+      "        \"id\": 2,\n" +
+      "        \"name\": \"Carol Martin\"\n" +
+      "      }\n" +
+      "    ],\n" +
+      "    \"favoriteFruit\": \"banana\"\n" +
+      "  }\n" +
+      "]";
+
+    String expected = "[{\"_id\":\"5973782bdb9a930533b05cb2\",\"isActive\":true,\"balance\":\"$1,446.35\",\"age\":32,\"eyeColor\":\"green\",\"name\":\"Logan Keller\",\"gender\":\"male\",\"company\":\"ARTIQ\",\"email\":\"logankeller@artiq.com\",\"phone\":\"+1 (952) 533-2258\",\"friends\":[{\"id\":0,\"name\":\"Colon Salazar\"},{\"id\":1,\"name\":\"French Mcneil\"},{\"id\":2,\"name\":\"Carol Martin\"}],\"favoriteFruit\":\"banana\"}]";
+
+    parser.parse(json);
+
+    Assert.assertEquals(expected, parser.toString());
+  }
+
+  @Test
+  public void parse_jsonServer() {
+
+    String json = "{\n" +
+      "  \"clients\": [\n" +
+      "    {\n" +
+      "      \"id\": \"59761c23b30d971669fb42ff\",\n" +
+      "      \"isActive\": true,\n" +
+      "      \"age\": 36,\n" +
+      "      \"name\": \"Dunlap Hubbard\",\n" +
+      "      \"gender\": \"male\",\n" +
+      "      \"company\": \"CEDWARD\",\n" +
+      "      \"email\": \"dunlaphubbard@cedward.com\",\n" +
+      "      \"phone\": \"+1 (890) 543-2508\",\n" +
+      "      \"address\": \"169 Rutledge Street, Konterra, Northern Mariana Islands, 8551\"\n" +
+      "    },\n" +
+      "    {\n" +
+      "      \"id\": \"59761c233d8d0f92a6b0570d\",\n" +
+      "      \"isActive\": true,\n" +
+      "      \"age\": 24,\n" +
+      "      \"name\": \"Kirsten Sellers\",\n" +
+      "      \"gender\": \"female\",\n" +
+      "      \"company\": \"EMERGENT\",\n" +
+      "      \"email\": \"kirstensellers@emergent.com\",\n" +
+      "      \"phone\": \"+1 (831) 564-2190\",\n" +
+      "      \"address\": \"886 Gallatin Place, Fannett, Arkansas, 4656\"\n" +
+      "    },\n" +
+      "    {\n" +
+      "      \"id\": \"59761c23fcb6254b1a06dad5\",\n" +
+      "      \"isActive\": true,\n" +
+      "      \"age\": 30,\n" +
+      "      \"name\": \"Acosta Robbins\",\n" +
+      "      \"gender\": \"male\",\n" +
+      "      \"company\": \"ORGANICA\",\n" +
+      "      \"email\": \"acostarobbins@organica.com\",\n" +
+      "      \"phone\": \"+1 (882) 441-3367\",\n" +
+      "      \"address\": \"697 Linden Boulevard, Sattley, Idaho, 1035\"\n" +
+      "    }\n" +
+      "  ]\n" +
+      "}";
+
+    String expected = "{\"clients\":[{\"id\":\"59761c23b30d971669fb42ff\",\"isActive\":true,\"age\":36,\"name\":\"Dunlap Hubbard\",\"gender\":\"male\",\"company\":\"CEDWARD\",\"email\":\"dunlaphubbard@cedward.com\",\"phone\":\"+1 (890) 543-2508\",\"address\":\"169 Rutledge Street, Konterra, Northern Mariana Islands, 8551\"},{\"id\":\"59761c233d8d0f92a6b0570d\",\"isActive\":true,\"age\":24,\"name\":\"Kirsten Sellers\",\"gender\":\"female\",\"company\":\"EMERGENT\",\"email\":\"kirstensellers@emergent.com\",\"phone\":\"+1 (831) 564-2190\",\"address\":\"886 Gallatin Place, Fannett, Arkansas, 4656\"},{\"id\":\"59761c23fcb6254b1a06dad5\",\"isActive\":true,\"age\":30,\"name\":\"Acosta Robbins\",\"gender\":\"male\",\"company\":\"ORGANICA\",\"email\":\"acostarobbins@organica.com\",\"phone\":\"+1 (882) 441-3367\",\"address\":\"697 Linden Boulevard, Sattley, Idaho, 1035\"}]}";
+
+    parser.parse(json);
+
+    Assert.assertEquals(expected, parser.toString());
+  }
+
+  @Test
+  public void parse_sandwich() {
+
+    String json = "{\n" +
+      "\t\"name\": {\n" +
+      "\t\t\"mainName\": \"Ham and cheese sandwich\",\n" +
+      "\t\t\"alsoKnownAs\": []\n" +
+      "\t},\n" +
+      "\t\"placeOfOrigin\": \"\",\n" +
+      "\t\"description\": \"A ham and cheese sandwich is a common type of sandwich. It is made by putting cheese and sliced ham between two slices of bread. The bread is sometimes buttered and/or toasted. Vegetables like lettuce, tomato, onion or pickle slices can also be included. Various kinds of mustard and mayonnaise are also common.\",\n" +
+      "\t\"image\": \"https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Grilled_ham_and_cheese_014.JPG/800px-Grilled_ham_and_cheese_014.JPG\",\n" +
+      "\t\"ingredients\": [\n" +
+      "\t\t\"Sliced bread\",\n" +
+      "\t\t\"Cheese\",\n" +
+      "\t\t\"Ham\"\n" +
+      "\t]\n" +
+      "}";
+
+    String expected = "{\"name\":{\"mainName\":\"Ham and cheese sandwich\",\"alsoKnownAs\":[]},\"placeOfOrigin\":\"\",\"description\":\"A ham and cheese sandwich is a common type of sandwich. It is made by putting cheese and sliced ham between two slices of bread. The bread is sometimes buttered and/or toasted. Vegetables like lettuce, tomato, onion or pickle slices can also be included. Various kinds of mustard and mayonnaise are also common.\",\"image\":\"https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Grilled_ham_and_cheese_014.JPG/800px-Grilled_ham_and_cheese_014.JPG\",\"ingredients\":[\"Sliced bread\",\"Cheese\",\"Ham\"]}";
+
+    parser.parse(json);
+
+    Assert.assertEquals(expected, parser.toString());
+  }
+
 }
 
