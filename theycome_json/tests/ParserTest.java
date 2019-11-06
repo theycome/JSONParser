@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import src.theycome_json.Parser;
+import src.theycome_json.containers.Container;
 
 /**
  * Created by theycome on 27.09.2019
@@ -553,6 +554,60 @@ public class ParserTest {
     parser.parse(json);
 
     Assert.assertEquals(expected, parser.toString());
+  }
+
+  @Test
+  public void getContainer_wrongPath() {
+
+    String json = "{\n" +
+      "\t\"name\": {\n" +
+      "\t\t\"mainName\": \"Ham and cheese sandwich\",\n" +
+      "\t\t\"alsoKnownAs\": []\n" +
+      "\t},\n" +
+      "\t\"placeOfOrigin\": \"\",\n" +
+      "\t\"description\": \"A ham and cheese sandwich is a common type of sandwich. It is made by putting cheese and sliced ham between two slices of bread. The bread is sometimes buttered and/or toasted. Vegetables like lettuce, tomato, onion or pickle slices can also be included. Various kinds of mustard and mayonnaise are also common.\",\n" +
+      "\t\"image\": \"https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Grilled_ham_and_cheese_014.JPG/800px-Grilled_ham_and_cheese_014.JPG\",\n" +
+      "\t\"ingredients\": [\n" +
+      "\t\t\"Sliced bread\",\n" +
+      "\t\t\"Cheese\",\n" +
+      "\t\t\"Ham\"\n" +
+      "\t]\n" +
+      "}";
+
+    String expected = "{\"name\":{\"mainName\":\"Ham and cheese sandwich\",\"alsoKnownAs\":[]},\"placeOfOrigin\":\"\",\"description\":\"A ham and cheese sandwich is a common type of sandwich. It is made by putting cheese and sliced ham between two slices of bread. The bread is sometimes buttered and/or toasted. Vegetables like lettuce, tomato, onion or pickle slices can also be included. Various kinds of mustard and mayonnaise are also common.\",\"image\":\"https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Grilled_ham_and_cheese_014.JPG/800px-Grilled_ham_and_cheese_014.JPG\",\"ingredients\":[\"Sliced bread\",\"Cheese\",\"Ham\"]}";
+
+    parser.parse(json);
+
+    Container container = parser.getContainer("name\\blablabla");
+
+    Assert.assertEquals(null, container);
+  }
+
+  @Test
+  public void getContainer_containerPath() {
+
+    String json = "{\n" +
+      "\t\"name\": {\n" +
+      "\t\t\"mainName\": \"Ham and cheese sandwich\",\n" +
+      "\t\t\"alsoKnownAs\": []\n" +
+      "\t},\n" +
+      "\t\"placeOfOrigin\": \"\",\n" +
+      "\t\"description\": \"A ham and cheese sandwich is a common type of sandwich. It is made by putting cheese and sliced ham between two slices of bread. The bread is sometimes buttered and/or toasted. Vegetables like lettuce, tomato, onion or pickle slices can also be included. Various kinds of mustard and mayonnaise are also common.\",\n" +
+      "\t\"image\": \"https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Grilled_ham_and_cheese_014.JPG/800px-Grilled_ham_and_cheese_014.JPG\",\n" +
+      "\t\"ingredients\": [\n" +
+      "\t\t\"Sliced bread\",\n" +
+      "\t\t\"Cheese\",\n" +
+      "\t\t\"Ham\"\n" +
+      "\t]\n" +
+      "}";
+
+    String expected = "{\"name\":{\"mainName\":\"Ham and cheese sandwich\",\"alsoKnownAs\":[]},\"placeOfOrigin\":\"\",\"description\":\"A ham and cheese sandwich is a common type of sandwich. It is made by putting cheese and sliced ham between two slices of bread. The bread is sometimes buttered and/or toasted. Vegetables like lettuce, tomato, onion or pickle slices can also be included. Various kinds of mustard and mayonnaise are also common.\",\"image\":\"https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Grilled_ham_and_cheese_014.JPG/800px-Grilled_ham_and_cheese_014.JPG\",\"ingredients\":[\"Sliced bread\",\"Cheese\",\"Ham\"]}";
+
+    parser.parse(json);
+
+    Container container = parser.getContainer("name\\alsoKnownAs");
+
+    Assert.assertEquals("alsoKnownAs", container.name);
   }
 
 }
