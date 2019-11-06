@@ -21,16 +21,16 @@ public class Parser {
 
   public enum VALUE_TYPE {array, object, string, number, bool, none}
 
-  Container mRoot;
+  Container root;
 
   @Override
   public String toString() {
 
-    if (mRoot == null) {
+    if (root == null) {
       return "";
     }
 
-    return mRoot.toString();
+    return root.toString();
   }
 
   /**
@@ -113,8 +113,8 @@ public class Parser {
    */
   public void parse(String json) {
 
-    mRoot = new RootContainer("");
-    parseNode(json, mRoot);
+    root = new RootContainer("");
+    parseNode(json, root);
   }
 
   /**

@@ -77,44 +77,44 @@ public class Utils {
    */
   static class ResultBuilder {
 
-    boolean mSuccess = false;
-    Pair<String, String> mSplit;
-    String mSubstring;
-    int mNumber = 0;
-    Parser.VALUE_TYPE mValueType = null;
+    boolean success = false;
+    Pair<String, String> split;
+    String substring;
+    int number = 0;
+    Parser.VALUE_TYPE valueType = null;
 
     public ResultBuilder success() {
-      this.mSuccess = true;
+      this.success = true;
       return this;
     }
 
     public ResultBuilder failure() {
-      this.mSuccess = false;
+      this.success = false;
       return this;
     }
 
     public ResultBuilder split(String lhs, String rhs) {
-      this.mSplit = new Pair<String, String>(lhs, rhs);
+      this.split = new Pair<String, String>(lhs, rhs);
       return this;
     }
 
     public ResultBuilder number(int number) {
-      this.mNumber = number;
+      this.number = number;
       return this;
     }
 
     public ResultBuilder substring(String substring) {
-      this.mSubstring = substring;
+      this.substring = substring;
       return this;
     }
 
     public ResultBuilder valueType(Parser.VALUE_TYPE valueType) {
-      this.mValueType = valueType;
+      this.valueType = valueType;
       return this;
     }
 
     public Result get() {
-      return new Result(mSuccess, mSplit, mSubstring, mNumber, mValueType);
+      return new Result(success, split, substring, number, valueType);
     }
   }
 
