@@ -5,9 +5,13 @@ package src.theycome_json.containers;
  */
 
 public abstract class Base {
-  public String name = "";
+  protected String name = "";
 
   public Base(String name) {
     this.name = name;
+  }
+
+  public String name() {
+    return name;
   }
 }

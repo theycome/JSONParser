@@ -5,7 +5,7 @@ package src.theycome_json.containers;
  */
 
 public class LeafString extends Base implements IValueAsString {
-  String value;
+  private String value;
 
   public LeafString(String name, String param) {
     super(name);

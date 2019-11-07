@@ -603,7 +603,7 @@ public class ParserTest {
 
     Container container = parser.getRoot().get("name\\alsoKnownAs");
 
-    Assert.assertEquals("alsoKnownAs", container.name);
+    Assert.assertEquals("alsoKnownAs", container.name());
   }
 
   @Test
@@ -655,10 +655,10 @@ public class ParserTest {
     Container container1 = container.get(1);
     Container container2 = container1.get("id");
 
-    Assert.assertEquals("id", container2.name);
+    Assert.assertEquals("id", container2.name());
 
     Container container3 = parser.getRoot().get("items").get(1).get("id");
-    Assert.assertEquals("id", container3.name);
+    Assert.assertEquals("id", container3.name());
   }
 
   @Test

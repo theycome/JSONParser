@@ -5,7 +5,7 @@ package src.theycome_json.containers;
  */
 
 public class LeafBool extends Base implements IValueAsString {
-  boolean value;
+  private boolean value;
 
   public LeafBool(String name, String param) {
     super(name);
