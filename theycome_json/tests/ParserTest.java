@@ -693,7 +693,7 @@ public class ParserTest {
       "    \"kind\": \"youtube#searchListResponse\",\n" +
       "    \"etag\": \"\\\"m2yskBQFythfE4irbTIeOgYYfBU/PaiEDiVxOyCWelLPuuwa9LKz3Gk\\\"\",\n" +
       "    \"nextPageToken\": \"CAUQAA\",\n" +
-      "    \"regionCode\": \"KE\",\n" +
+      "    \"regionCode\": 101,\n" +
       "    \"pageInfo\": {\n" +
       "    \"totalResults\": 4249,\n" +
       "      \"resultsPerPage\": 5\n" +
@@ -716,7 +716,7 @@ public class ParserTest {
       "    }\n" +
       "    },\n" +
       "    {\n" +
-      "      \"kind\": \"youtube#searchResult\",\n" +
+      "      \"kind\": 115,\n" +
       "      \"etag\": \"\\\"m2yskBQFythfE4irbTIeOgYYfBU/2dIR9BTfr7QphpBuY3hPU-h5u-4\\\"\",\n" +
       "      \"id\": {\n" +
       "      \"kind\": \"youtube#video\",\n" +
@@ -728,6 +728,14 @@ public class ParserTest {
 
     parser.parse(json);
 
+    int res = parser.getRoot().getInt("regionCode");
+    Assert.assertEquals(101, res);
+
+    res = parser.getRoot().getInt("pageInfo\\totalResults");
+    Assert.assertEquals(4249, res);
+
+    res = parser.getRoot().get("items").get(2).getInt("kind");
+    Assert.assertEquals(115, res);
   }
 
 }

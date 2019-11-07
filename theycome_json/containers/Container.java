@@ -9,7 +9,7 @@ import java.util.List;
  */
 
 public abstract class Container extends Base {
-  protected List<Base> entries = new ArrayList<Base>();
+  protected List<Base> entries = new ArrayList<>();
 
   public Container(String name) {
     super(name);
