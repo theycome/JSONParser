@@ -4,7 +4,7 @@ package src.theycome_json.containers;
  * Created by theycome on 24.10.2019
  */
 
-public class LeafNumber extends Base {
+public class LeafNumber extends Base implements IValueAsString {
   String value;
 
   public LeafNumber(String name, String param) {
@@ -24,4 +24,14 @@ public class LeafNumber extends Base {
     builder.append(value);
     return builder.toString();
   }
+
+  @Override
+  public String valueAsString() {
+    return value;
+  }
+
+  public int valueAsInt() {
+    return Integer.parseInt(value);
+  }
+
 }

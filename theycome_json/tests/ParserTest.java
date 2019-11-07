@@ -557,7 +557,7 @@ public class ParserTest {
   }
 
   @Test
-  public void getContainer_wrongPath() {
+  public void get_wrongPath() {
 
     String json = "{\n" +
       "\t\"name\": {\n" +
@@ -576,13 +576,13 @@ public class ParserTest {
 
     parser.parse(json);
 
-    Container container = parser.get("name\\blablabla");
+    Container container = parser.getRoot().get("name\\blablabla");
 
     Assert.assertEquals(null, container);
   }
 
   @Test
-  public void getContainer_containerPath() {
+  public void get_containerPath() {
 
     String json = "{\n" +
       "\t\"name\": {\n" +
@@ -601,13 +601,13 @@ public class ParserTest {
 
     parser.parse(json);
 
-    Container container = parser.get("name\\alsoKnownAs");
+    Container container = parser.getRoot().get("name\\alsoKnownAs");
 
     Assert.assertEquals("alsoKnownAs", container.name);
   }
 
   @Test
-  public void getContainer_nodeArrayAndChild() {
+  public void get_nodeArrayAndChild() {
 
     String json = "  {\n" +
       "    \"kind\": \"youtube#searchListResponse\",\n" +
@@ -648,7 +648,7 @@ public class ParserTest {
 
     parser.parse(json);
 
-    Container container = parser.get("items");
+    Container container = parser.getRoot().get("items");
 
     Assert.assertEquals(3, container.entriesSize());
 
@@ -657,8 +657,77 @@ public class ParserTest {
 
     Assert.assertEquals("id", container2.name);
 
-    Container container3 = parser.get("items").get(1).get("id");
+    Container container3 = parser.getRoot().get("items").get(1).get("id");
     Assert.assertEquals("id", container3.name);
+  }
+
+  @Test
+  public void getString() {
+
+    String json = "{\n" +
+      "\t\"name\": {\n" +
+      "\t\t\"mainName\": \"Ham and cheese sandwich\",\n" +
+      "\t\t\"alsoKnownAs\": []\n" +
+      "\t},\n" +
+      "\t\"placeOfOrigin\": \"\",\n" +
+      "\t\"description\": \"A ham and cheese sandwich is a common type of sandwich. It is made by putting cheese and sliced ham between two slices of bread. The bread is sometimes buttered and/or toasted. Vegetables like lettuce, tomato, onion or pickle slices can also be included. Various kinds of mustard and mayonnaise are also common.\",\n" +
+      "\t\"image\": \"https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Grilled_ham_and_cheese_014.JPG/800px-Grilled_ham_and_cheese_014.JPG\",\n" +
+      "\t\"ingredients\": [\n" +
+      "\t\t\"Sliced bread\",\n" +
+      "\t\t\"Cheese\",\n" +
+      "\t\t\"Ham\"\n" +
+      "\t]\n" +
+      "}";
+
+    parser.parse(json);
+
+    String res = parser.getRoot().get("name").getString("mainName");
+
+    Assert.assertEquals("Ham and cheese sandwich", res);
+  }
+
+  @Test
+  public void getInt() {
+
+    String json = "  {\n" +
+      "    \"kind\": \"youtube#searchListResponse\",\n" +
+      "    \"etag\": \"\\\"m2yskBQFythfE4irbTIeOgYYfBU/PaiEDiVxOyCWelLPuuwa9LKz3Gk\\\"\",\n" +
+      "    \"nextPageToken\": \"CAUQAA\",\n" +
+      "    \"regionCode\": \"KE\",\n" +
+      "    \"pageInfo\": {\n" +
+      "    \"totalResults\": 4249,\n" +
+      "      \"resultsPerPage\": 5\n" +
+      "  },\n" +
+      "    \"items\": [\n" +
+      "    {\n" +
+      "      \"kind\": \"youtube#searchResult\",\n" +
+      "      \"etag\": \"\\\"m2yskBQFythfE4irbTIeOgYYfBU/QpOIr3QKlV5EUlzfFcVvDiJT0hw\\\"\",\n" +
+      "      \"id\": {\n" +
+      "      \"kind\": \"youtube#channel\",\n" +
+      "        \"channelId\": \"UCJowOS1R0FnhipXVqEnYU1A\"\n" +
+      "    }\n" +
+      "    },\n" +
+      "    {\n" +
+      "      \"kind\": \"youtube#searchResult\",\n" +
+      "      \"etag\": \"\\\"m2yskBQFythfE4irbTIeOgYYfBU/AWutzVOt_5p1iLVifyBdfoSTf9E\\\"\",\n" +
+      "      \"id\": {\n" +
+      "      \"kind\": \"youtube#video\",\n" +
+      "        \"videoId\": \"Eqa2nAAhHN0\"\n" +
+      "    }\n" +
+      "    },\n" +
+      "    {\n" +
+      "      \"kind\": \"youtube#searchResult\",\n" +
+      "      \"etag\": \"\\\"m2yskBQFythfE4irbTIeOgYYfBU/2dIR9BTfr7QphpBuY3hPU-h5u-4\\\"\",\n" +
+      "      \"id\": {\n" +
+      "      \"kind\": \"youtube#video\",\n" +
+      "        \"videoId\": \"IirngItQuVs\"\n" +
+      "    }\n" +
+      "    }\n" +
+      "    ]\n" +
+      "  }";
+
+    parser.parse(json);
+
   }
 
 }

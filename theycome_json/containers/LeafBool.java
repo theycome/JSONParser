@@ -4,7 +4,7 @@ package src.theycome_json.containers;
  * Created by theycome on 29.10.2019
  */
 
-public class LeafBool extends Base {
+public class LeafBool extends Base implements IValueAsString {
   boolean value;
 
   public LeafBool(String name, String param) {
@@ -30,5 +30,10 @@ public class LeafBool extends Base {
     }
 
     return builder.toString();
+  }
+
+  @Override
+  public String valueAsString() {
+    return value ? "true" : "false";
   }
 }

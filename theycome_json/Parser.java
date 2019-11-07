@@ -132,10 +132,9 @@ public class Parser {
   /**
    *
    */
-  public Container get(String path) {
-    return root.get(path);
+  public Container getRoot() {
+    return root;
   }
-
 }
 
 

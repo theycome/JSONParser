@@ -4,7 +4,7 @@ package src.theycome_json.containers;
  * Created by theycome on 24.10.2019
  */
 
-public class LeafString extends Base {
+public class LeafString extends Base implements IValueAsString {
   String value;
 
   public LeafString(String name, String param) {
@@ -25,5 +25,10 @@ public class LeafString extends Base {
     builder.append(value);
     builder.append("\"");
     return builder.toString();
+  }
+
+  @Override
+  public String valueAsString() {
+    return value;
   }
 }

@@ -56,13 +56,15 @@ public abstract class Container extends Base {
     }
   }
 
+  private String[] splitPath(String path) {
+    return path.split("\\\\");
+  }
+
   /**
    * get Container at string path (delimited by '\') in entries array
    */
   public Container get(String path) {
-
-    String[] pathParts = path.split("\\\\");
-    return (Container) getEntry(pathParts);
+    return (Container) getEntry(splitPath(path));
   }
 
   /**
@@ -75,6 +77,34 @@ public abstract class Container extends Base {
     }
     else {
       return (Container) entries.get(index);
+    }
+  }
+
+  /**
+   *
+   */
+  public String getString(String path) {
+
+    Base entry = getEntry(splitPath(path));
+    if (entry instanceof IValueAsString) {
+      return ((IValueAsString) entry).valueAsString();
+    }
+    else {
+      return "";
+    }
+  }
+
+  /**
+   *
+   */
+  public int getInt(String path) {
+
+    Base entry = getEntry(splitPath(path));
+    if (entry instanceof LeafNumber) {
+      return ((LeafNumber) entry).valueAsInt();
+    }
+    else {
+      return 0;
     }
   }
 
