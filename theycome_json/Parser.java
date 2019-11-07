@@ -5,9 +5,7 @@ package src.theycome_json;
  */
 
 import java.security.InvalidParameterException;
-import java.util.List;
 
-import src.theycome_json.containers.Base;
 import src.theycome_json.containers.Container;
 import src.theycome_json.containers.LeafBool;
 import src.theycome_json.containers.LeafNumber;
@@ -134,26 +132,8 @@ public class Parser {
   /**
    *
    */
-  public Container getContainer(String path, Container parent) {
-    return getContainerInner(path, parent);
-  }
-
-  /**
-   *
-   */
-  public Container getContainer(String path) {
-    return getContainerInner(path, null);
-  }
-
-  /**
-   *
-   */
-  private Container getContainerInner(String path, Container parent) {
-
-    String[] pathParts = path.split("\\\\");
-
-    Container root = parent == null ? this.root : parent;
-    return (Container)root.getEntry(pathParts);
+  public Container get(String path) {
+    return root.get(path);
   }
 
 }

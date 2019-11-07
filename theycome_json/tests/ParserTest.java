@@ -574,11 +574,9 @@ public class ParserTest {
       "\t]\n" +
       "}";
 
-    String expected = "{\"name\":{\"mainName\":\"Ham and cheese sandwich\",\"alsoKnownAs\":[]},\"placeOfOrigin\":\"\",\"description\":\"A ham and cheese sandwich is a common type of sandwich. It is made by putting cheese and sliced ham between two slices of bread. The bread is sometimes buttered and/or toasted. Vegetables like lettuce, tomato, onion or pickle slices can also be included. Various kinds of mustard and mayonnaise are also common.\",\"image\":\"https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Grilled_ham_and_cheese_014.JPG/800px-Grilled_ham_and_cheese_014.JPG\",\"ingredients\":[\"Sliced bread\",\"Cheese\",\"Ham\"]}";
-
     parser.parse(json);
 
-    Container container = parser.getContainer("name\\blablabla");
+    Container container = parser.get("name\\blablabla");
 
     Assert.assertEquals(null, container);
   }
@@ -601,13 +599,66 @@ public class ParserTest {
       "\t]\n" +
       "}";
 
-    String expected = "{\"name\":{\"mainName\":\"Ham and cheese sandwich\",\"alsoKnownAs\":[]},\"placeOfOrigin\":\"\",\"description\":\"A ham and cheese sandwich is a common type of sandwich. It is made by putting cheese and sliced ham between two slices of bread. The bread is sometimes buttered and/or toasted. Vegetables like lettuce, tomato, onion or pickle slices can also be included. Various kinds of mustard and mayonnaise are also common.\",\"image\":\"https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Grilled_ham_and_cheese_014.JPG/800px-Grilled_ham_and_cheese_014.JPG\",\"ingredients\":[\"Sliced bread\",\"Cheese\",\"Ham\"]}";
+    parser.parse(json);
+
+    Container container = parser.get("name\\alsoKnownAs");
+
+    Assert.assertEquals("alsoKnownAs", container.name);
+  }
+
+  @Test
+  public void getContainer_nodeArrayAndChild() {
+
+    String json = "  {\n" +
+      "    \"kind\": \"youtube#searchListResponse\",\n" +
+      "    \"etag\": \"\\\"m2yskBQFythfE4irbTIeOgYYfBU/PaiEDiVxOyCWelLPuuwa9LKz3Gk\\\"\",\n" +
+      "    \"nextPageToken\": \"CAUQAA\",\n" +
+      "    \"regionCode\": \"KE\",\n" +
+      "    \"pageInfo\": {\n" +
+      "    \"totalResults\": 4249,\n" +
+      "      \"resultsPerPage\": 5\n" +
+      "  },\n" +
+      "    \"items\": [\n" +
+      "    {\n" +
+      "      \"kind\": \"youtube#searchResult\",\n" +
+      "      \"etag\": \"\\\"m2yskBQFythfE4irbTIeOgYYfBU/QpOIr3QKlV5EUlzfFcVvDiJT0hw\\\"\",\n" +
+      "      \"id\": {\n" +
+      "      \"kind\": \"youtube#channel\",\n" +
+      "        \"channelId\": \"UCJowOS1R0FnhipXVqEnYU1A\"\n" +
+      "    }\n" +
+      "    },\n" +
+      "    {\n" +
+      "      \"kind\": \"youtube#searchResult\",\n" +
+      "      \"etag\": \"\\\"m2yskBQFythfE4irbTIeOgYYfBU/AWutzVOt_5p1iLVifyBdfoSTf9E\\\"\",\n" +
+      "      \"id\": {\n" +
+      "      \"kind\": \"youtube#video\",\n" +
+      "        \"videoId\": \"Eqa2nAAhHN0\"\n" +
+      "    }\n" +
+      "    },\n" +
+      "    {\n" +
+      "      \"kind\": \"youtube#searchResult\",\n" +
+      "      \"etag\": \"\\\"m2yskBQFythfE4irbTIeOgYYfBU/2dIR9BTfr7QphpBuY3hPU-h5u-4\\\"\",\n" +
+      "      \"id\": {\n" +
+      "      \"kind\": \"youtube#video\",\n" +
+      "        \"videoId\": \"IirngItQuVs\"\n" +
+      "    }\n" +
+      "    }\n" +
+      "    ]\n" +
+      "  }";
 
     parser.parse(json);
 
-    Container container = parser.getContainer("name\\alsoKnownAs");
+    Container container = parser.get("items");
 
-    Assert.assertEquals("alsoKnownAs", container.name);
+    Assert.assertEquals(3, container.entriesSize());
+
+    Container container1 = container.get(1);
+    Container container2 = container1.get("id");
+
+    Assert.assertEquals("id", container2.name);
+
+    Container container3 = parser.get("items").get(1).get("id");
+    Assert.assertEquals("id", container3.name);
   }
 
 }

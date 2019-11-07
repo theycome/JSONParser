@@ -9,7 +9,7 @@ import java.util.List;
  */
 
 public abstract class Container extends Base {
-  public List<Base> entries = new ArrayList<Base>();
+  protected List<Base> entries = new ArrayList<Base>();
 
   public Container(String name) {
     super(name);
@@ -19,7 +19,14 @@ public abstract class Container extends Base {
     entries.add(entry);
   }
 
-  public Base getEntry(String[] pathParts) {
+  public int entriesSize() {
+    return entries.size();
+  }
+
+  /**
+   *
+   */
+  private Base getEntry(String[] pathParts) {
 
     String part = pathParts[0];
 
@@ -48,4 +55,27 @@ public abstract class Container extends Base {
       return null;
     }
   }
+
+  /**
+   * get Container at string path (delimited by '\') in entries array
+   */
+  public Container get(String path) {
+
+    String[] pathParts = path.split("\\\\");
+    return (Container) getEntry(pathParts);
+  }
+
+  /**
+   * get Container at index in entries array
+   */
+  public Container get(int index) {
+
+    if (index > entries.size() - 1) {
+      return null;
+    }
+    else {
+      return (Container) entries.get(index);
+    }
+  }
+
 }
