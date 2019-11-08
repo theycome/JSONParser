@@ -38,7 +38,7 @@ public abstract class Container extends Base {
       }
       else {
         Base entry = ((Container) base).entries.get(index);
-        return ((Container)entry).getEntry(pathPartsRhs);
+        return ((Container) entry).getEntry(pathPartsRhs);
       }
     }
     else {
@@ -119,6 +119,23 @@ public abstract class Container extends Base {
   /**
    *
    */
+  public List<String> getStringArray(String path) {
+
+    List<String> list = new ArrayList<>();
+
+    Base entry = getEntry(splitPath(path));
+    for (Base entryInArray : ((Container) entry).entries) {
+      if (entryInArray instanceof IValueAsString) {
+        list.add(((IValueAsString) entryInArray).valueAsString());
+      }
+    }
+
+    return list;
+  }
+
+  /**
+   *
+   */
   public int getInt(String path) {
 
     Base entry = getEntry(splitPath(path));
@@ -133,6 +150,23 @@ public abstract class Container extends Base {
   /**
    *
    */
+  public List<Integer> getIntArray(String path) {
+
+    List<Integer> list = new ArrayList<>();
+
+    Base entry = getEntry(splitPath(path));
+    for (Base entryInArray : ((Container) entry).entries) {
+      if (entryInArray instanceof LeafNumber) {
+        list.add(((LeafNumber) entryInArray).valueAsInt());
+      }
+    }
+
+    return list;
+  }
+
+  /**
+   *
+   */
   public double getDouble(String path) {
 
     Base entry = getEntry(splitPath(path));
@@ -142,6 +176,23 @@ public abstract class Container extends Base {
     else {
       return 0;
     }
+  }
+
+  /**
+   *
+   */
+  public List<Double> getDoubleArray(String path) {
+
+    List<Double> list = new ArrayList<>();
+
+    Base entry = getEntry(splitPath(path));
+    for (Base entryInArray : ((Container) entry).entries) {
+      if (entryInArray instanceof LeafNumber) {
+        list.add(((LeafNumber) entryInArray).valueAsDouble());
+      }
+    }
+
+    return list;
   }
 
   /**

@@ -5,8 +5,13 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.List;
+
 import src.theycome_json.Parser;
 import src.theycome_json.containers.Container;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by theycome on 27.09.2019
@@ -834,6 +839,88 @@ public class ParserTest {
     boolean res = parser.getRoot().getBool("name\\value");
 
     Assert.assertEquals(true, res);
+  }
+
+  @Test
+  public void getStringArray() {
+
+    String json = "{\n" +
+      "\t\"name\": {\n" +
+      "\t\t\"mainName\": \"Ham and cheese sandwich\",\n" +
+      "\t\t\"alsoKnownAs\": [\"a\",\"b\",\"c\"]\n" +
+      "\t},\n" +
+      "\t\"placeOfOrigin\": \"\",\n" +
+      "\t\"description\": \"A ham and cheese sandwich is a common type of sandwich. It is made by putting cheese and sliced ham between two slices of bread. The bread is sometimes buttered and/or toasted. Vegetables like lettuce, tomato, onion or pickle slices can also be included. Various kinds of mustard and mayonnaise are also common.\",\n" +
+      "\t\"image\": \"https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Grilled_ham_and_cheese_014.JPG/800px-Grilled_ham_and_cheese_014.JPG\",\n" +
+      "\t\"ingredients\": [\n" +
+      "\t\t\"Sliced bread\",\n" +
+      "\t\t\"Cheese\",\n" +
+      "\t\t\"Ham\"\n" +
+      "\t]\n" +
+      "}";
+
+    parser.parse(json);
+
+    List<String> res = parser.getRoot().getStringArray("name\\alsoKnownAs");
+    Assert.assertEquals(Arrays.asList("a", "b", "c"), res);
+
+    res = parser.getRoot().getStringArray("ingredients");
+    Assert.assertEquals(Arrays.asList("Sliced bread", "Cheese", "Ham"), res);
+  }
+
+  @Test
+  public void getIntArray() {
+
+    String json = "{\n" +
+      "    \"colors\": [\n" +
+      "    {\n" +
+      "      \"color\": \"black\",\n" +
+      "      \"category\": \"hue\",\n" +
+      "      \"type\": \"primary\",\n" +
+      "      \"code\": {\n" +
+      "      \"rgba\": [255,255,255,1],\n" +
+      "      \"hex\": \"#000\"\n" +
+      "    }\n" +
+      "    },\n" +
+      "    {\n" +
+      "      \"color\": \"white\",\n" +
+      "      \"category\": \"value\",\n" +
+      "      \"code\": {\n" +
+      "      \"rgba\": [0,0,0,1],\n" +
+      "      \"hex\": \"#FFF\"\n" +
+      "    }},\n" +
+      "    ]}";
+
+    parser.parse(json);
+
+    List<Integer> res = parser.getRoot().getIntArray("colors[0]\\code\\rgba");
+    Assert.assertEquals(Arrays.asList(255, 255, 255, 1), res);
+  }
+
+  @Test
+  public void getDoubleArray() {
+
+    String json = "{\n" +
+      "  \"markers\": [\n" +
+      "    {\n" +
+      "      \"name\": \"Rixos The Palm Dubai\",\n" +
+      "      \"position\": [25.1212, 55.1535],\n" +
+      "    },\n" +
+      "    {\n" +
+      "      \"name\": \"Shangri-La Hotel\",\n" +
+      "      \"location\": [25.2084, 55.2719]\n" +
+      "    },\n" +
+      "    {\n" +
+      "      \"name\": \"Grand Hyatt\",\n" +
+      "      \"location\": [25.2285, 55.3273]\n" +
+      "    }\n" +
+      "  ]\n" +
+      "}";
+
+    parser.parse(json);
+
+    List<Double> res = parser.getRoot().getDoubleArray("markers[1]\\location");
+    Assert.assertEquals(Arrays.asList(25.2084, 55.2719), res);
   }
 
 }
