@@ -923,5 +923,34 @@ public class ParserTest {
     Assert.assertEquals(Arrays.asList(25.2084, 55.2719), res);
   }
 
+  @Test
+  public void getEmptyArray() {
+
+    String json = "{\n" +
+      "\t\"name\": {\n" +
+      "\t\t\"mainName\": \"Ham and cheese sandwich\",\n" +
+      "\t\t\"alsoKnownAs\": []\n" +
+      "\t},\n" +
+      "\t\"placeOfOrigin\": \"\",\n" +
+      "\t\"description\": \"A ham and cheese sandwich is a common type of sandwich. It is made by putting cheese and sliced ham between two slices of bread. The bread is sometimes buttered and/or toasted. Vegetables like lettuce, tomato, onion or pickle slices can also be included. Various kinds of mustard and mayonnaise are also common.\",\n" +
+      "\t\"image\": \"https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Grilled_ham_and_cheese_014.JPG/800px-Grilled_ham_and_cheese_014.JPG\",\n" +
+      "\t\"ingredients\": [\n" +
+      "\t\t\"Sliced bread\",\n" +
+      "\t\t\"Cheese\",\n" +
+      "\t\t\"Ham\"\n" +
+      "\t]\n" +
+      "}";
+
+    parser.parse(json);
+
+    List<Double> res1 = parser.getRoot().getDoubleArray("name\\alsoKnownAs");
+    Assert.assertEquals(0, res1.size());
+
+    List<Integer> res2 = parser.getRoot().getIntArray("name\\alsoKnownAs");
+    Assert.assertEquals(0, res2.size());
+
+    List<String> res3 = parser.getRoot().getStringArray("name\\alsoKnownAs");
+    Assert.assertEquals(0, res3.size());
+  }
 }
 
