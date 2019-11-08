@@ -738,5 +738,52 @@ public class ParserTest {
     Assert.assertEquals(115, res);
   }
 
+  @Test
+  public void get_AtIndexInBrackets() {
+
+    String json = "  {\n" +
+      "    \"kind\": \"youtube#searchListResponse\",\n" +
+      "    \"etag\": \"\\\"m2yskBQFythfE4irbTIeOgYYfBU/PaiEDiVxOyCWelLPuuwa9LKz3Gk\\\"\",\n" +
+      "    \"nextPageToken\": \"CAUQAA\",\n" +
+      "    \"regionCode\": 101,\n" +
+      "    \"pageInfo\": {\n" +
+      "    \"totalResults\": 4249,\n" +
+      "      \"resultsPerPage\": 5\n" +
+      "  },\n" +
+      "    \"items\": [\n" +
+      "    {\n" +
+      "      \"kind\": \"youtube#searchResult\",\n" +
+      "      \"etag\": \"\\\"m2yskBQFythfE4irbTIeOgYYfBU/QpOIr3QKlV5EUlzfFcVvDiJT0hw\\\"\",\n" +
+      "      \"id\": {\n" +
+      "      \"kind\": \"youtube#channel\",\n" +
+      "        \"channelId\": \"UCJowOS1R0FnhipXVqEnYU1A\"\n" +
+      "    }\n" +
+      "    },\n" +
+      "    {\n" +
+      "      \"kind\": \"youtube#searchResult\",\n" +
+      "      \"etag\": \"\\\"m2yskBQFythfE4irbTIeOgYYfBU/AWutzVOt_5p1iLVifyBdfoSTf9E\\\"\",\n" +
+      "      \"id\": {\n" +
+      "      \"kind\": \"youtube#video\",\n" +
+      "        \"videoId\": \"Eqa2nAAhHN0\"\n" +
+      "    }\n" +
+      "    },\n" +
+      "    {\n" +
+      "      \"kind\": 115,\n" +
+      "      \"etag\": \"\\\"m2yskBQFythfE4irbTIeOgYYfBU/2dIR9BTfr7QphpBuY3hPU-h5u-4\\\"\",\n" +
+      "      \"id\": {\n" +
+      "      \"kind\": \"youtube#video\",\n" +
+      "        \"videoId\": \"IirngItQuVs\"\n" +
+      "    }\n" +
+      "    }\n" +
+      "    ]\n" +
+      "  }";
+
+    parser.parse(json);
+
+    String res = parser.getRoot().getString("items[1]\\id\\videoId");
+
+    Assert.assertEquals("Eqa2nAAhHN0", res);
+  }
+
 }
 
