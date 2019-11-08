@@ -16,6 +16,7 @@ import src.theycome_json.containers.Container;
 public class ParserTest {
 
   Parser parser = new Parser();
+  double delta = 0.00001;
 
   @Before
   public void setUp() throws Exception {
@@ -783,6 +784,56 @@ public class ParserTest {
     String res = parser.getRoot().getString("items[1]\\id\\videoId");
 
     Assert.assertEquals("Eqa2nAAhHN0", res);
+  }
+
+  @Test
+  public void getDouble() {
+
+    String json = "{\n" +
+      "\t\"name\": {\n" +
+      "\t\t\"mainName\": \"Ham and cheese sandwich\",\n" +
+      "\t\t\"value\": 101.015\n" +
+      "\t},\n" +
+      "\t\"placeOfOrigin\": \"\",\n" +
+      "\t\"description\": \"A ham and cheese sandwich is a common type of sandwich. It is made by putting cheese and sliced ham between two slices of bread. The bread is sometimes buttered and/or toasted. Vegetables like lettuce, tomato, onion or pickle slices can also be included. Various kinds of mustard and mayonnaise are also common.\",\n" +
+      "\t\"image\": \"https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Grilled_ham_and_cheese_014.JPG/800px-Grilled_ham_and_cheese_014.JPG\",\n" +
+      "\t\"ingredients\": [\n" +
+      "\t\t\"Sliced bread\",\n" +
+      "\t\t\"Cheese\",\n" +
+      "\t\t\"Ham\"\n" +
+      "\t]\n" +
+      "}";
+
+    parser.parse(json);
+
+    double res = parser.getRoot().getDouble("name\\value");
+
+    Assert.assertEquals(101.015, res, delta);
+  }
+
+  @Test
+  public void getBool() {
+
+    String json = "{\n" +
+      "\t\"name\": {\n" +
+      "\t\t\"mainName\": \"Ham and cheese sandwich\",\n" +
+      "\t\t\"value\": true\n" +
+      "\t},\n" +
+      "\t\"placeOfOrigin\": \"\",\n" +
+      "\t\"description\": \"A ham and cheese sandwich is a common type of sandwich. It is made by putting cheese and sliced ham between two slices of bread. The bread is sometimes buttered and/or toasted. Vegetables like lettuce, tomato, onion or pickle slices can also be included. Various kinds of mustard and mayonnaise are also common.\",\n" +
+      "\t\"image\": \"https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Grilled_ham_and_cheese_014.JPG/800px-Grilled_ham_and_cheese_014.JPG\",\n" +
+      "\t\"ingredients\": [\n" +
+      "\t\t\"Sliced bread\",\n" +
+      "\t\t\"Cheese\",\n" +
+      "\t\t\"Ham\"\n" +
+      "\t]\n" +
+      "}";
+
+    parser.parse(json);
+
+    boolean res = parser.getRoot().getBool("name\\value");
+
+    Assert.assertEquals(true, res);
   }
 
 }

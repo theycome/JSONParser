@@ -130,4 +130,31 @@ public abstract class Container extends Base {
     }
   }
 
+  /**
+   *
+   */
+  public double getDouble(String path) {
+
+    Base entry = getEntry(splitPath(path));
+    if (entry instanceof LeafNumber) {
+      return ((LeafNumber) entry).valueAsDouble();
+    }
+    else {
+      return 0;
+    }
+  }
+
+  /**
+   *
+   */
+  public boolean getBool(String path) {
+
+    Base entry = getEntry(splitPath(path));
+    if (entry instanceof LeafBool) {
+      return ((LeafBool) entry).get();
+    }
+    else {
+      return false;
+    }
+  }
 }

@@ -36,4 +36,8 @@ public class LeafBool extends Base implements IValueAsString {
   public String valueAsString() {
     return value ? "true" : "false";
   }
+
+  public boolean get() {
+    return value;
+  }
 }

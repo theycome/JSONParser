@@ -34,4 +34,8 @@ public class LeafNumber extends Base implements IValueAsString {
     return Integer.parseInt(value);
   }
 
+  public double valueAsDouble() {
+    return Double.parseDouble(value);
+  }
+
 }
